@@ -14,6 +14,5 @@ export default () => (
       <GlobalStyles />
       <Router isLoggedIn={!false} />
     </>
-    
   </ThemeProvider>
 );
