@@ -1,11 +1,11 @@
 import React from 'react';
 import { gql } from "apollo-boost";
-import { ThemeProvider } from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import GlobalStyles from '../Styles/GlobalStyles';
 import Theme from "../Styles/Theme";
 import Router from "./Router";
 import { useQuery } from "react-apollo-hooks";
-
+import Footer from "./Footer";
 /*
 @client 어노테이션을 하지 않으면
 apollo가 query를 api 즉 서버로 보내려고 할 것이다.
@@ -17,6 +17,12 @@ const QUERY = gql`
   {
     isLoggedIn @client
   }
+`;
+
+const Wrapper = styled.div`
+  margin: 0 auto;
+  max-width: 935px;
+  width: 100%;
 `;
 
 /*
@@ -33,10 +39,11 @@ export default () => {
 
   return (
   <ThemeProvider theme={Theme}>
-    <>
+    <Wrapper>
       <GlobalStyles />
       <Router isLoggedIn={isLoggedIn} />
-    </>
+      <Footer />
+    </Wrapper>
   </ThemeProvider>
   );
 }
