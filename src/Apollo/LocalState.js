@@ -7,7 +7,7 @@ app이 오프라인상태에서 발생하는것임
 어떤사람들은 이걸 redux로 하곤 하는데 여기선 이걸로 해도 괜찮다.
 */
 export const defaults = {
-  isLoggedIn: localStorage.getItem("token") !== null? true:false
+  isLoggedIn: Boolean(localStorage.getItem("token")) || false
 };
 
 export const resolvers = {
