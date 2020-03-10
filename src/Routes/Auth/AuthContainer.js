@@ -29,18 +29,26 @@ export default () => {
   const lastName = useInput("");
 	const email = useInput("");
 	
-	const [requestSecret]  = useMutation(LOG_IN, {
+	const [requestSecretMutation]  = useMutation(LOG_IN, {
 		/*
 		update는 Mutation이 발생할 때 실해되는 함수이다. 두번째 인자로 해당 mutation의 결과를 받는다.
-		여기서 mutation은 useMutation()의 첫번째 인자인 LOG_IN에 나와있는 requestSecret의 결과값인데.
+		여기서 mutation은 useMutation()의 반환값인 requestSecretMutation()를 실행했을 때의 반환값인데.
+		반환값은 LOG_IN에 명시된 실제로 grapql서버로 요청하는 mutation 함수의 반환값이다.
 		apollo docs에 살펴보면 requestSecret은 Boolean을 리턴하는 것을 볼 수 있다.
-		따라서 두번째 인자는 true또는 false이다.
+		따라서 두번째 인자를 console.log 해보면
+					{data: {…}}
+			data:
+			requestSecret: false
+			__proto__: Object
+			__proto__: Object
+			이렇게 나온다.
+		보통 cache,local storage 를 업데이트 하거나, apollo client에 접근할때 update함수를 사용한다.
 		*/
-		update: (_, { data }) => {
 			/*
-			data의 형태는 object인데 해당 mutation 즉 여기서는 requestSecret의 결과값으로 표현된다.
-			ex::: data = {requestSecret:ture}
-			*/
+		update: (_, { data }) => {
+			//data의 형태는 object인데 해당 mutation 즉 여기서는 requestSecret의 결과값으로 표현된다.
+			//ex::: data = {requestSecret:ture}
+
 			const { requestSecret } = data;
 			if(! requestSecret ){
 				//회원목록에 없는 email이면 경고 notification을 띄우고 3초뒤에 signup페이지를 띄운다.
@@ -48,6 +56,8 @@ export default () => {
 				setTimeout(() => setAction("signUp"),3000);
 			}
 		},
+		*/
+
 		/*
 			useMutation의 첫번째 인자인 LOG_IN mutation은 인자를 1개 email을 받는다.
 			이 인자를 넣는 방법은 아래와 같다. 
@@ -56,7 +66,7 @@ export default () => {
 		variables: { email:email.value }
 	});
 
-	const [createAccount] = useMutation(CREATE_ACCOUNT,{
+	const [createAccountMutation] = useMutation(CREATE_ACCOUNT,{
 		variables:{
 			email: email.value,
 			username: username.value,
@@ -69,13 +79,25 @@ export default () => {
 	 로그인or SignUp 버튼을 눌렀을 때 페이지가 새로고침 되지 않게 하기 위해
 	 preventDefault() 설정
 	*/
-	const onSubmit=(e) => {
+	const onSubmit= async (e) => {
 		//로그인or SignUp 버튼이 눌렸을 때 리렌더링 즉 새로고침 방지
 		e.preventDefault();
 
 		if(action==="logIn"){
 			if(email !== ""){
-				requestSecret();
+				try{
+					/*
+
+					*/
+					const  { data:{requestSecret} }  = await requestSecretMutation();
+					if(! requestSecret ){
+						//회원목록에 없는 email이면 경고 notification을 띄우고 3초뒤에 signup페이지를 띄운다.
+						toast.error("You don't have an account yet, create one");
+						setTimeout(() => setAction("signUp"),3000);
+					}
+				}catch{
+					toast.error("Can't request secret, try again");
+				}
 			}else{
 				toast.error("Email is required.");
 			}
@@ -86,7 +108,18 @@ export default () => {
 				firstName.value !=="" &&
 				lastName.value !=="" 
 			){
-				createAccount();
+				try{
+					const {data:{createAccouont} } = await createAccountMutation();
+					console.log(createAccouont);
+					if(!createAccouont){
+						toast.error("Can't create account");
+					}else {
+						toast.success("Account created! Log In now");
+						setTimeout(()=>setAction("logIn"),3000);
+					}
+				}catch(e){
+					toast.error(e.message);
+				}
 			}else{
 				toast.error("All fields are required.");	
 			}
