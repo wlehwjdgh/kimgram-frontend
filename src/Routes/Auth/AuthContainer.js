@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import AuthPresenter from "./AuthPresenter";
 import useInput from "../../Hooks/useInput";
 import { useMutation } from "react-apollo-hooks";
-import { LOG_IN, CREATE_ACCOUNT } from "./AuthQueries";
+import { LOG_IN, CREATE_ACCOUNT, CONFIRM_SECRET, LOCAL_LOG_IN } from "./AuthQueries";
 
 /*
 Auth 컴포넌트 분리
@@ -27,8 +27,8 @@ export default () => {
   */
 	const [action, setAction] = useState("logIn");
 	
-  const username = useInput("");
-  const firstName = useInput("");
+  	const username = useInput("");
+  	const firstName = useInput("");
 	const lastName = useInput("");
 	const secret = useInput("");
 	const email = useInput("");
@@ -79,6 +79,14 @@ export default () => {
 		}
 	});
 
+	const [confirmSecretMutation] = useMutation(CONFIRM_SECRET,{
+		variables:{
+			secret: secret.value,
+			email: email.value
+		}
+	});
+
+	const [localLogInMutation] = useMutation(LOCAL_LOG_IN);
 	/*
 	 로그인or SignUp 버튼을 눌렀을 때 페이지가 새로고침 되지 않게 하기 위해
 	 preventDefault() 설정
@@ -90,9 +98,6 @@ export default () => {
 		if(action==="logIn"){
 			if(email !== ""){
 				try{
-					/*
-
-					*/
 					const  { data:{requestSecret} }  = await requestSecretMutation();
 					if(! requestSecret ){
 						//회원목록에 없는 email이면 경고 notification을 띄우고 3초뒤에 signup페이지를 띄운다.
@@ -108,7 +113,7 @@ export default () => {
 			}else{
 				toast.error("Email is required.");
 			}
-		}else{
+		}else if(action === "signUp"){
 			if(
 				email.value !=="" &&
 				username.value !=="" &&
@@ -130,8 +135,31 @@ export default () => {
 			}else{
 				toast.error("All fields are required.");	
 			}
-		}
+		}else if(action === "confirm"){
+			if(secret.value !== ""){
+				try{
+					const { data:{ confirmSecret:token } } = await confirmSecretMutation();
+					if(token!=="" && token !== undefined){
+						/*
+							mutation함수에 variables 인자를 전달하는 방법은 2가지 이다.
+							1. mutation을 생성할 때 
+							2. mutation을 호출할 때
 
+							다른 mutation들(createAccountMutation, requestSecretMutation)과 달리
+							localLogInMutation을 호출할때 variables를 전달한 이유는.
+							전달될 token이 mutation이 생성될 때는 존재 하지 않기 때문이다.
+							token은 바로 위 라인의 await confirmSecretMutation(); 뮤테이션을 통해
+							서버로부터 전달된다.
+						*/
+						localLogInMutation( {variables:{ token }});
+					} else {
+						throw Error();
+					}
+				}catch{
+					toast.error("Can't confirm secret, check again");
+				}
+			}
+		}
 	};
 
   return (
