@@ -1,13 +1,15 @@
-import React from 'react';
+import React from "react";
 import { gql } from "apollo-boost";
 import styled, { ThemeProvider } from "styled-components";
+import { HashRouter as Router } from "react-router-dom";
+import { useQuery } from "react-apollo-hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import GlobalStyles from '../Styles/GlobalStyles';
+import GlobalStyles from "../Styles/GlobalStyles";
 import Theme from "../Styles/Theme";
-import Router from "./Router";
-import { useQuery } from "react-apollo-hooks";
+import Routes from "./Routes";
 import Footer from "./Footer";
+import Header from "./Header";
 /*
 @client 어노테이션을 하지 않으면
 apollo가 query를 api 즉 서버로 보내려고 할 것이다.
@@ -23,7 +25,7 @@ const QUERY = gql`
 
 const Wrapper = styled.div`
   margin: 0 auto;
-  max-width: 935px;
+  max-width: ${props => props.theme.maxWidth};
   width: 100%;
 `;
 
@@ -38,15 +40,22 @@ export default () => {
   데이터를 얻을 수 있다,
   */
   const { data : {isLoggedIn} } = useQuery(QUERY);
-
+ 
   return (
-  <ThemeProvider theme={Theme}>
-    <Wrapper>
-      <GlobalStyles />
-      <Router isLoggedIn={isLoggedIn} />
-      <Footer />
-      <ToastContainer position={toast.POSITION.BOTTOM_LEFT} />
-    </Wrapper>
-  </ThemeProvider>
+    <ThemeProvider theme={Theme}>
+      <>
+        <GlobalStyles />
+        <Router>
+          <>
+            <Header />
+            <Wrapper>
+              <Routes isLoggedIn={isLoggedIn} />
+              <Footer />
+            </Wrapper>
+          </>
+        </Router>
+        <ToastContainer position={toast.POSITION.BOTTOM_LEFT} />
+      </>
+    </ThemeProvider>
   );
-}
+};
