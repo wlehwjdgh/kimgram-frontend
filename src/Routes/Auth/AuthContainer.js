@@ -6,7 +6,10 @@ import { useMutation } from "react-apollo-hooks";
 import { LOG_IN, CREATE_ACCOUNT } from "./AuthQueries";
 
 /*
-Auth의 style 관련된건 AuthPresenter.js에 구현
+Auth 컴포넌트 분리
+Auth의 
+style 관련된건 AuthPresenter.js에 구현
+서버 쿼리관련된건 AuthQueries.js
 나머지는 여기 AuthContainer.js에 구현한다.
 이렇게 하는 이유는 Auth컴포넌트가 길어지기 때문에 복잡한것을 분리하는것이다.
 */
@@ -26,7 +29,8 @@ export default () => {
 	
   const username = useInput("");
   const firstName = useInput("");
-  const lastName = useInput("");
+	const lastName = useInput("");
+	const secret = useInput("");
 	const email = useInput("");
 	
 	const [requestSecretMutation]  = useMutation(LOG_IN, {
@@ -94,6 +98,9 @@ export default () => {
 						//회원목록에 없는 email이면 경고 notification을 띄우고 3초뒤에 signup페이지를 띄운다.
 						toast.error("You don't have an account yet, create one");
 						setTimeout(() => setAction("signUp"),3000);
+					}else {
+						toast.success("Check your inbox for your login secret");
+						setAction("confirm");
 					}
 				}catch{
 					toast.error("Can't request secret, try again");
@@ -109,9 +116,9 @@ export default () => {
 				lastName.value !=="" 
 			){
 				try{
-					const {data:{createAccouont} } = await createAccountMutation();
-					console.log(createAccouont);
-					if(!createAccouont){
+					const {data:{createAccount} } = await createAccountMutation();
+					console.log(createAccount);
+					if(!createAccount){
 						toast.error("Can't create account");
 					}else {
 						toast.success("Account created! Log In now");
@@ -135,6 +142,7 @@ export default () => {
 			firstName={firstName}
 			lastName={lastName}
 			email={email}
+			secret={secret}
 			onSubmit={onSubmit}
 		/>
   );
