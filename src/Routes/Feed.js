@@ -1,1 +1,4 @@
-export default () => "Feed";
+export default (data) => {
+    console.log(data)
+    return "Feed";
+}

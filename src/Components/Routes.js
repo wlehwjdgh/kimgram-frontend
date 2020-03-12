@@ -9,20 +9,22 @@ import Search from "../Routes/Search";
 import Profile from "../Routes/Profile";
 
 const LoggedInRoutes = () => (
-  <>
+  //<Switch></Switch>는 여러 라우트중 하나의 라우트만 렌더링 하게 해준다.
+  <Switch>
     <Route exact path="/" component={Feed}/>
     <Route path="/explore" component={Explore} />
     <Route path="/search" component={Search} />
-    <Route path="/username" component={Profile} />   
-  </>
+    <Route path="/:username" component={Profile} />   
+  </Switch>
 
 );
-const LoggedOutRoutes = () => <><Route exact path="/" component={Auth}></Route></>
-
+const LoggedOutRoutes = () => (
+  <Switch>
+    <><Route exact path="/" component={Auth}></Route></>
+  </Switch>
+);
 const AppRouter = ({isLoggedIn}) =>(
-    <Switch>
-      {isLoggedIn ? <LoggedInRoutes/> : <LoggedOutRoutes/>}
-    </Switch>
+  isLoggedIn ? <LoggedInRoutes/> : <LoggedOutRoutes/>
 );
 
 AppRouter.propTypes = {
