@@ -1,5 +1,10 @@
 import React from "react";
 
+/*
+All from https://iconmonstr.com/
+TODO: more lean about UI lecture
+*/
+
 export const Compass = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -55,10 +60,10 @@ export const Comment = () => (
   </svg>
 );
 
-export const Logo = () => (
+export const Logo = ({size=24}) => (
   <svg
   xmlns="http://www.w3.org/2000/svg"
-  width="24"
+  width={size}
   height="24"
   viewBox="0 0 24 24"
   >
