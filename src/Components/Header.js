@@ -86,7 +86,8 @@ const ME = gql`
 //export default (data) => {
 export default withRouter( ({history}) => {
   const search = useInput("");
-  const meQuery = useQuery(ME);
+  const {  data } = useQuery(ME);
+  //console.log(data&&data.me);
   const onSearchSubmit = e => {
     e.preventDefault();
     //파라미터의 경로로 redirect하자!
@@ -112,9 +113,15 @@ export default withRouter( ({history}) => {
           <HeaderLink to="/notifications">
             <HeartEmpty />
           </HeaderLink>
-          <HeaderLink to="/username">
+          {!(data&&data.me) ? (
+            <HeaderLink to="/username">
             <User />
-          </HeaderLink>
+            </HeaderLink>
+          ) : (
+            <HeaderLink to={data.me.username}>
+            <User />
+            </HeaderLink>
+          )}
         </HeaderColumn>
       </HeaderWrapper>
     </Header>
