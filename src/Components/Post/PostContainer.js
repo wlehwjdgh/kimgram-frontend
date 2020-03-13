@@ -15,9 +15,35 @@ const PostContainer = ({
   likeCount,
   isLiked,
   comments,
-  createdAt
+	createdAt,
+	caption,
+	location
 }) =>{
-	return <PostPresenter />;
+	/*
+		isLiked와 likeCount만 useState하는 이유
+		사용자가 눌렀을 때 좋아요 여부와 좋아요 개수를 
+		다시 서버로 부터 요청하는 것이 아니고
+		그자리에서 바로 갱신하기 위해서.
+
+	*/
+	const [isLikedS, setIsLiked] = useState(isLiked);
+  const [likeCountS, setLikeCount] = useState(likeCount);
+  const comment = useInput("");
+  return (
+    <PostPresenter
+      user={user}
+      files={files}
+      likeCount={likeCountS}
+      location={location}
+      caption={caption}
+      isLiked={isLikedS}
+      comments={comments}
+      createdAt={createdAt}
+      newComment={comment}
+      setIsLiked={setIsLiked}
+      setLikeCount={setLikeCount}
+    />
+  );
 };
 
 PostContainer.propTypes = {
@@ -58,7 +84,9 @@ PostContainer.propTypes = {
 			}).isRequired
 		})
 	).isRequired,
-	createdAt: PropTypes.string
+  caption: PropTypes.string.isRequired,
+  location: PropTypes.string,
+  createdAt: PropTypes.string.isRequired
 };
 
 export default PostContainer;
