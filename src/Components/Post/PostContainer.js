@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { useMutation } from "react-apollo-hooks";
 import useInput from "../../Hooks/useInput";
 import PostPresenter from "./PostPresenter";
+import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
+import { toast } from "react-toastify";
 
 /*
 export default 하지 않는 이유는 
@@ -29,7 +32,22 @@ const PostContainer = ({
 	const [isLikedS, setIsLiked] = useState(isLiked);
 	const [likeCountS, setLikeCount] = useState(likeCount);
 	const [currentItem, setCurrentItem] = useState(0);
+  const comment = useInput("");
+	/*
+	src/Routes/Auth/AuthContainer에 useMutation에 대한 설명을 해 놓았다.
+	*/
+	const [toggleLikeMutation] = useMutation(TOGGLE_LIKE,{
+		variables:{
+			postId: id
+		}
+	});
 
+	const [addCommentMutation] = useMutation(ADD_COMMENT,{
+		variables:{
+			postId: id,
+			text: comment.value
+		}
+	});
 
 	const slide= () => {
 		const totalFiles = files.length;
@@ -40,15 +58,33 @@ const PostContainer = ({
 		}
 	}
 
+	const toggleLike = async () => {
+		/*
+			await을 하지 않는이유.
+			사용자에게 하트 클릭 결과(하트 표시 & 좋아요 카운트 증가)를 빨리 보여주기 위해 
+			아무래도 데모 서버이기 때문에 속도가 느려서 이렇게 처리한듯
+
+			하트를 마구 클릭할때 페이지 요소검사 -> 네트워크 탭을 보면 요청이 펜딩되며 쌓이는 것을 볼 수 있다.
+			실제 인스타그램 에서도 똑같은 실험을 했을때 서버 응답 속도가 매우 빠름
+		*/
+		toggleLikeMutation();
+
+		//새로고침해도 state가 유지된다.. 새로 안 사실 
+		if ( isLikedS === true ) {
+			setIsLiked(false);
+			setLikeCount(likeCountS-1);
+		} else {
+			setIsLiked(true);
+			setLikeCount(likeCountS+1);
+		}
+	};
 	/*
 		Post Component가 Mount될때 실행됨
 	*/
 	useEffect(()=>{
 		slide();
 	},[currentItem]);
-	
-	console.log(currentItem);
-  const comment = useInput("");
+
   return (
     <PostPresenter
       user={user}
@@ -63,6 +99,7 @@ const PostContainer = ({
       setIsLiked={setIsLiked}
 			setLikeCount={setLikeCount}
 			currentItem={currentItem}
+			toggleLike={toggleLike}
     />
   );
 };

@@ -33,6 +33,17 @@ export default () => {
 	const secret = useInput("");
 	const email = useInput("");
 	
+	/*
+		useMutation()의 첫번째 인자는 gql 쿼리문이다.
+		두번째 인자는  첫번째 인자읜 gql쿼리문에서 요구되는 인자이다.
+
+		useMutation()의 반환값은 함수이름이다. 
+		여기서는 requestSecretMutation()함수가 반횐된 것인데.
+		LOG_IN을 하고 싶을때 이 함수를 부르면 된다,
+		그렇게 되면 gql 쿼리 요청을 하게되고 해당 쿼리의 반환값을 
+		object형태로 받을 수 있다.
+		리턴값 중 {data:{실제 gql함수이름}}에 쿼리의 반환값이 들어있다.
+	*/
 	const [requestSecretMutation]  = useMutation(LOG_IN, {
 		/*
 		update는 Mutation이 발생할 때 실해되는 함수이다. 두번째 인자로 해당 mutation의 결과를 받는다.
@@ -86,6 +97,12 @@ export default () => {
 		}
 	});
 
+	/*
+		두번째 인자인 variables가 없는 이유
+		해당 쿼리에 필요한 인자는 아래의 코드가 실행될 때는 존재하지 않는다.
+		mutation에 인자를 전달하는 방법 중 mutation을 실행할 때 전달하는 방법을 택한 것이다. 
+		이 파일 아래에 해당 mutation을 실행하는 코드가 있으니 참고하도록 하자.
+	*/
 	const [localLogInMutation] = useMutation(LOCAL_LOG_IN);
 	/*
 	 로그인or SignUp 버튼을 눌렀을 때 페이지가 새로고침 되지 않게 하기 위해

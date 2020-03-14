@@ -5,11 +5,15 @@ import FatText from "../FatText";
 import Avatar from "../Avatar";
 import { HeartFull, HeartEmpty, Comment } from "../Icons";
 
+/*
+  user-select = 사용자가 클릭 시 파란색으로 뒤덮이는 것 제어 
+*/
 const Post = styled.div`
   ${props => props.theme.whiteBox};
   width: 100%;
   max-width: 600px;
   margin-bottom: 25px;
+  user-select: none;
 `;
 
 const Header = styled.header`
@@ -102,7 +106,8 @@ export default ({
   likeCount,
   createdAt,
   newComment,
-  currentItem 
+  currentItem,
+  toggleLike
 }) => (
   <Post>
     <Header>
@@ -118,7 +123,9 @@ export default ({
     </Files>
     <Meta>
       <Buttons>
-        <Button>{isLiked ? <HeartFull /> : <HeartEmpty />}</Button>
+        <Button onClick={toggleLike}>
+          {isLiked ? <HeartFull /> : <HeartEmpty />}
+        </Button>
         <Button>
           <Comment />
         </Button>

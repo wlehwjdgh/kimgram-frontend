@@ -7,6 +7,7 @@ export default new ApolloClient({
         defaults,
         resolvers
     },
+    //헤더에 로그인 시 서버로부터 부여받은 token값을 붙여야만 token이 필요한 api 사용 가능
     headers: {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
     }
