@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useMutation } from "react-apollo-hooks";
+import { useMutation, useQuery } from "react-apollo-hooks";
+import { toast } from "react-toastify";
 import useInput from "../../Hooks/useInput";
 import PostPresenter from "./PostPresenter";
 import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
-import { toast } from "react-toastify";
 
 /*
 export default 하지 않는 이유는 
 PostContainer.propTypes해야하기 때문이다
 */
-
 const PostContainer = ({ 
   id,
   user,
@@ -32,7 +31,9 @@ const PostContainer = ({
 	const [isLikedS, setIsLiked] = useState(isLiked);
 	const [likeCountS, setLikeCount] = useState(likeCount);
 	const [currentItem, setCurrentItem] = useState(0);
-  const comment = useInput("");
+	const [selfComments, setSelfComments] = useState([]);
+	const comment = useInput("");
+
 	/*
 	src/Routes/Auth/AuthContainer에 useMutation에 대한 설명을 해 놓았다.
 	*/
@@ -93,14 +94,20 @@ const PostContainer = ({
 		또한 엔터키가 눌렸을 때 comment.setValue("")를 호출하는 이유는 위에 나타낸 textarea의 특성을 없애고 
 		엔터를 눌렀을 때 값을 초기화 하고 리랜더링 하기 위함이다.
 	*/
-	const onKeyUp = async (e) =>{
-		if(e.keyCode === 13){
+	const onKeyPress = async (event) =>{
+		const { which } = event;
+		if(which === 13){
+			event.preventDefault();
+			try{
+				const {data: {addComment}} = await addCommentMutation();
+				setSelfComments([...selfComments, addComment]);
+			}catch {
+				toast.error("Can't send comment.");
+			}
 			comment.setValue("");
-			await addCommentMutation();
 		}
 		return;
 	};
-
   return (
     <PostPresenter
       user={user}
@@ -116,7 +123,8 @@ const PostContainer = ({
 			setLikeCount={setLikeCount}
 			currentItem={currentItem}
 			toggleLike={toggleLike}
-			onKeyUp={onKeyUp}
+			onKeyPress={onKeyPress}
+			selfComments={selfComments}
     />
   );
 };

@@ -88,6 +88,7 @@ const Timestamp = styled.span`
 
   TODO: styled component에 대해 스터디..
 */
+
 const Textarea= styled(TextareaAutosize)`
   border: none;
   width: 100%;
@@ -119,8 +120,9 @@ export default ({
   newComment,
   currentItem,
   toggleLike,
-  onKeyUp,
-  comments
+  onKeyPress,
+  comments,
+  selfComments
 }) => (
   <Post>
     <Header>
@@ -144,9 +146,16 @@ export default ({
         </Button>
       </Buttons>
       <FatText text={likeCount === 1 ? "1 like" : `${likeCount} likes`} />
+
       {comments && (
         <Comments>
           {comments.map(comment => (
+            <Comment key={comment.id}>
+              <FatText text={comment.user.username} />
+              {comment.text}
+            </Comment>
+          ))}
+          {selfComments.map(comment => (
             <Comment key={comment.id}>
               <FatText text={comment.user.username} />
               {comment.text}
@@ -178,7 +187,7 @@ export default ({
           onkeyup : 키를 눌렀다가 땠을 때 이벤트이다 (onkeydown 에서 인식하는 키들을 인식 한다)
           onkeypress : 실제로 글자가 써질때 이벤트이다 (shift, tap, enter 등의 특수키는 인식 못한다).
         */
-        onKeyUp={onKeyUp}
+        onKeyPress={onKeyPress}
       />
     </Meta>
   </Post>

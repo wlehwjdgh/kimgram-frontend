@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { Link,  withRouter } from "react-router-dom";
-import { gql } from "apollo-boost";
 import { useQuery } from "react-apollo-hooks";
 import Input from "./Input";
 import useInput from "../Hooks/useInput";
 import { Compass, HeartEmpty, User, Logo } from "./Icons";
+import { ME } from "../SharedQueries";
 
 const Header = styled.header`
   width: 100%;
@@ -62,15 +62,6 @@ const HeaderLink = styled(Link)`
     margin-right: 30px;
   }
 `;
-
-const ME = gql`
-  {
-    me {
-      username
-    }
-  }
-`;
-
 
 /*
   라우트로 설정된 컴포넌트(이 프로젝트에서는 src/Routes.js에서 설정함)
