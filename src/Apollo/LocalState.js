@@ -28,7 +28,7 @@ export const resolvers = {
 				logout시 전체페이지를 reload하고,
 				모든 cache를 없애는게 좋을것 같다.
 			*/
-			window.location.reload();
+			window.location="/";
 			return null;
 		}
 	}
