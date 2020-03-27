@@ -7,6 +7,7 @@ import Feed from "../Routes/Feed";
 import Explore from "../Routes/Explore";
 import Search from "../Routes/Search";
 import Profile from "../Routes/Profile";
+import Post from "../Routes/Post";
 
 const LoggedInRoutes = () => (
   //<Switch></Switch>는 여러 라우트중 하나의 라우트만 렌더링 하게 해준다.
@@ -16,6 +17,7 @@ const LoggedInRoutes = () => (
     <Route path="/explore" component={Explore} />
     <Route path="/search" component={Search} />
     <Route path="/:username" component={Profile} />   
+    <Route path="/:postid" component={Post} />
     <Redirect from="*" to="/"/>
   </Switch>
 

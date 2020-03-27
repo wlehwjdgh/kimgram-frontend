@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Helmet } from "rl-react-helmet";
+import Popup from "reactjs-popup";
 import Loader from "../../Components/Loader";
 import Avatar from "../../Components/Avatar";
 import FatText from "../../Components/FatText";
@@ -117,15 +118,34 @@ export default ({ loading, data, logOut }) => {
           </HeaderColumn>
         </Header>
         <Posts>
-          {posts &&
-            posts.map(post => (
-              <SquarePost
-                key={post.id}
-                likeCount={post.likeCount}
-                commentCount={post.commentCount}
-                file={post.files[0]}
-              />
-            ))}
+          {
+            posts &&
+              posts.map(
+                post => (
+                  <Popup
+                    trigger={
+                    <SquarePost
+                      key={post.id}
+                      likeCount={post.likeCount}
+                      commentCount={post.commentCount}
+                      file={post.files[0]}
+                    />
+                    }
+                    modal
+                  >
+                    sadssad
+                  </Popup>
+                  /*
+                <SquarePost
+                  key={post.id}
+                  likeCount={post.likeCount}
+                  commentCount={post.commentCount}
+                  file={post.files[0]}
+                />
+                */
+              ))
+            }
+            
         </Posts>
       </Wrapper>
     );

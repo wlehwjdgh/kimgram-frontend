@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import Popup from "reactjs-popup";
 import { HeartFull, CommentFull } from "./Icons";
 
 const Overlay = styled.div`
@@ -43,6 +44,7 @@ const NumberText = styled.span`
 `;
 
 const SquarePost = ({ likeCount, commentCount, file }) => (
+  /*
   <Container bg={file.url}>
     <Overlay>
       <Number>
@@ -55,6 +57,26 @@ const SquarePost = ({ likeCount, commentCount, file }) => (
       </Number>
     </Overlay>
   </Container>
+  */
+  <Popup 
+    trigger={
+      <Container bg={file.url}>
+        <Overlay>
+          <Number>
+            <HeartFull />
+            <NumberText>{likeCount}</NumberText>
+          </Number>
+          <Number>
+            <CommentFull />
+            <NumberText>{commentCount}</NumberText>
+          </Number>
+        </Overlay>
+      </Container>
+    } 
+    modal
+  >
+    이강산 씨봉뇬
+</Popup>
 );
 
 SquarePost.propTypes = {
