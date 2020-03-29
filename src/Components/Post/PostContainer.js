@@ -33,7 +33,6 @@ const PostContainer = ({
 	const [currentItem, setCurrentItem] = useState(0);
 	const [selfComments, setSelfComments] = useState([]);
 	const comment = useInput("");
-
 	/*
 	src/Routes/Auth/AuthContainer에 useMutation에 대한 설명을 해 놓았다.
 	*/
@@ -49,7 +48,14 @@ const PostContainer = ({
 			text: comment.value
 		}
 	});
-
+	
+	/*
+		Post Component가 Mount될때 실행됨
+	*/
+	/*
+	useEffect(()=>{
+		slide();
+	},[currentItem]);
 	const slide= () => {
 		const totalFiles = files.length;
 		if(currentItem === totalFiles -1){
@@ -58,6 +64,23 @@ const PostContainer = ({
 			setTimeout(() => setCurrentItem(currentItem+1),3000);
 		}
 	}
+*/
+	
+	const slide = (direction) => {
+		const totalFiles = files.length;
+		/*
+		if(currentItem === totalFiles -1){
+			setCurrentItem(0);
+		}else{
+			setCurrentItem(currentItem+1);
+		}
+		*/
+		if(direction==="right" && currentItem <= totalFiles -2){
+			setCurrentItem(currentItem+1);
+		}else if(direction==="left" && currentItem !== 0){
+			setCurrentItem(currentItem-1);
+		}
+	};
 
 	const toggleLike = async () => {
 		/*
@@ -79,12 +102,6 @@ const PostContainer = ({
 			setLikeCount(likeCountS+1);
 		}
 	};
-	/*
-		Post Component가 Mount될때 실행됨
-	*/
-	useEffect(()=>{
-		slide();
-	},[currentItem]);
 
 	/*
 		onKeyUp()은 src/Componentes/Post/PostPresenter.js에서 댓글 창인 Textarea input에서 쓰인다.
@@ -108,6 +125,12 @@ const PostContainer = ({
 		}
 		return;
 	};
+
+	let images = new Array();
+	files && 
+	files.map( (file, index) =>{ 
+		images[index] = file.url;
+	})
   return (
     <PostPresenter
       user={user}
@@ -125,6 +148,8 @@ const PostContainer = ({
 			toggleLike={toggleLike}
 			onKeyPress={onKeyPress}
 			selfComments={selfComments}
+			slide={slide}
+			images={images}
     />
   );
 };

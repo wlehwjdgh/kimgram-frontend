@@ -43,41 +43,29 @@ const NumberText = styled.span`
   font-size: 16px;
 `;
 
-const SquarePost = ({ likeCount, commentCount, file }) => (
-  /*
-  <Container bg={file.url}>
-    <Overlay>
-      <Number>
-        <HeartFull />
-        <NumberText>{likeCount}</NumberText>
-      </Number>
-      <Number>
-        <CommentFull />
-        <NumberText>{commentCount}</NumberText>
-      </Number>
-    </Overlay>
-  </Container>
-  */
-  <Popup 
-    trigger={
-      <Container bg={file.url}>
-        <Overlay>
-          <Number>
-            <HeartFull />
-            <NumberText>{likeCount}</NumberText>
-          </Number>
-          <Number>
-            <CommentFull />
-            <NumberText>{commentCount}</NumberText>
-          </Number>
-        </Overlay>
-      </Container>
-    } 
-    modal
-  >
-    이강산 씨봉뇬
-</Popup>
-);
+function CustomButton (props) {
+  console.log(props)
+  return <button {...props}>Custom</button>;
+}
+
+
+const SquarePost = ({ likeCount, commentCount, file , ...props}) => {
+  console.log(props);
+  return (
+    <Container bg={file.url} {...props}>
+      <Overlay>
+        <Number>
+          <HeartFull />
+          <NumberText>{likeCount}</NumberText>
+        </Number>
+        <Number>
+          <CommentFull />
+          <NumberText>{commentCount}</NumberText>
+        </Number>
+      </Overlay>
+    </Container>
+  );
+};
 
 SquarePost.propTypes = {
   likeCount: PropTypes.number.isRequired,

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import TextareaAutosize from "react-autosize-textarea";
 import FatText from "../FatText";
 import Avatar from "../Avatar";
-import { HeartFull, HeartEmpty, Comment as CommentIcon } from "../Icons";
+import { HeartFull, HeartEmpty, Comment as CommentIcon, LeftArrow, RightArrow } from "../Icons";
 
 /*
   user-select = 사용자가 클릭 시 파란색으로 뒤덮이는 것 제어 
@@ -118,6 +118,18 @@ const Caption = styled.div`
   margin: 10px 0px;
 `;
 
+const properties = {
+  duration: 5000,
+  transitionDuration: 500,
+  infinite: true,
+  indicators: true,
+  arrows: true,
+  pauseOnHover: true,
+  onChange: (oldIndex, newIndex) => {
+    console.log(`slide transition from ${oldIndex} to ${newIndex}`);
+  }
+}
+ 
 export default ({
   user: { username, avatar },
   location,
@@ -131,7 +143,9 @@ export default ({
   onKeyPress,
   comments,
   selfComments,
-  caption
+  caption,
+  slide,
+  images
 }) => (
   <Post>
     <Header>
@@ -143,9 +157,11 @@ export default ({
         <Location>{location}</Location>
       </UserColumn>
     </Header>
-    <Files>
-      {files && 
-        files.map( (file, index) => <File key={file.id} src={file.url} showing={index===currentItem}/>)}
+    <Files >
+      {
+        files && 
+        files.map( (file, index) => <File key={file.id} src={file.url} showing={index===currentItem}/>)
+      }
     </Files>
     <Meta>
       <Buttons>
@@ -154,6 +170,12 @@ export default ({
         </Button>
         <Button>
           <CommentIcon />
+        </Button>
+        <Button onClick={()=>slide("left")}>
+          <LeftArrow />
+        </Button>
+        <Button onClick={()=>slide("right")}>
+          <RightArrow />
         </Button>
       </Buttons>
       <FatText text={likeCount === 1 ? "1 like" : `${likeCount} likes`} />

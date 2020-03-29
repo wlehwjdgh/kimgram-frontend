@@ -20,6 +20,16 @@ export const GET_USER = gql`
         }
         likeCount
         commentCount
+        likeCount
+        isLiked
+        comments {
+          id
+          text
+          user {
+            id
+            username
+          }
+        }
       }
     }
   }

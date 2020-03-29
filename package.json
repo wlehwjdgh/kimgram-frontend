@@ -15,6 +15,8 @@
     "react-helmet": "^5.2.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
+    "react-simple-image-slider": "^1.0.2",
+    "react-slideshow-image": "^1.4.0",
     "react-toastify": "^5.5.0",
     "reactjs-popup": "^1.5.0",
     "rl-react-helmet": "^5.2.0",

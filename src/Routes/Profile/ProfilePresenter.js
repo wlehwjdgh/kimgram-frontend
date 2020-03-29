@@ -8,6 +8,7 @@ import FatText from "../../Components/FatText";
 import FollowButton from "../../Components/FollowButton";
 import SquarePost from "../../Components/SquarePost";
 import Button from "../../Components/Button";
+import Post from "../../Components/Post";
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -84,6 +85,7 @@ export default ({ loading, data, logOut }) => {
         posts
       }
     } = data;
+
     return (
       <Wrapper>
         <Helmet>
@@ -122,27 +124,32 @@ export default ({ loading, data, logOut }) => {
             posts &&
               posts.map(
                 post => (
-                  <Popup
-                    trigger={
-                    <SquarePost
-                      key={post.id}
-                      likeCount={post.likeCount}
-                      commentCount={post.commentCount}
-                      file={post.files[0]}
-                    />
-                    }
+
+                  <Popup 
+                    trigger={(props)=>
+                      <SquarePost
+                        key={post.id}
+                        likeCount={post.likeCount}
+                        commentCount={post.commentCount}
+                        file={post.files[0]}
+                        props
+                      />
+                    } 
                     modal
                   >
-                    sadssad
-                  </Popup>
-                  /*
-                <SquarePost
-                  key={post.id}
-                  likeCount={post.likeCount}
-                  commentCount={post.commentCount}
-                  file={post.files[0]}
-                />
-                */
+                  <Post 
+                    key={post.id} 
+                    id={post.id} 
+                    location={post.location}
+                    caption={post.caption}
+                    user={data}				
+                    files={post.files}
+                    likeCount={post.likeCount}
+                    isLiked={post.isLiked}
+                    comments={post.comments}
+                    createdAt={post.createdAt}
+                  />
+                </Popup>
               ))
             }
             
